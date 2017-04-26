@@ -11,7 +11,6 @@ public class TerrainTriangle {
 	private TerrainTile parentTile;
 	private VertexInfo vi;
 
-	
 	public TerrainVector vRA;
 	public TerrainVector vAT;
 	public TerrainVector vAB;
@@ -42,27 +41,28 @@ public class TerrainTriangle {
 
 		colour = new Color(.9f, .8f, .7f, 1f);
 
-		float str = parentTile.getParentChunk().getParentTerrain().getStrength();
+		float maxHeight = parentTile.getParentChunk().getParentTerrain().getMaxHeight();
 
-		float step6 = str * 0.99f;
-		float step5 = str * 0.90f;
-		float step4 = str * 0.75f;
-		float step3 = str * 0.45f;
-		float step2 = str * 0.25f;
-		float step1 = str * 0.15f;	
-		
-		if (vRA.z >= step6 * str && vAT.z >= step6 * str && vAB.z >= step6 * str) {
+		System.out.println(maxHeight);
+		float step6 = maxHeight * 0.75f;
+		float step5 = maxHeight * 0.65f;
+		float step4 = maxHeight * 0.45f;
+		float step3 = maxHeight * 0.35f;
+		float step2 = maxHeight * 0.20f;
+		float step1 = maxHeight * 0.15f;
+ 
+		if (vRA.z >= step6 && vAT.z >= step6 && vAB.z >= step6) {
 			colour = new Color(1f, 1f, 1f, 1f);
-		} else if (vRA.z >= step5 * str && vAT.z >= step5 * str && vAB.z >= step5 * str) {
+		} else if (vRA.z >= step5 && vAT.z >= step5 && vAB.z >= step5) {
 			colour = new Color(.7f, .7f, .7f, 1f);
-		} else if (vRA.z >= step4 * str && vAT.z >= step4 * str && vAB.z >= step4 * str) {
+		} else if (vRA.z >= step4 && vAT.z >= step4 && vAB.z >= step4) {
 			colour = new Color(.5f, .6f, .3f, 1f);
-		} else if (vRA.z >= step3 * str && vAT.z >= step3 * str && vAB.z >= step3 * str) {
+		} else if (vRA.z >= step3 && vAT.z >= step3 && vAB.z >= step3) {
 			colour = new Color(.2f, .4f, .2f, 1f);
-		} else if (vRA.z >= step2 * str && vAT.z >= step2 * str && vAB.z >= step2 * str) {
+		} else if (vRA.z >= step2 && vAT.z >= step2 && vAB.z >= step2) {
 			colour = new Color(.3f, .6f, .3f, 1f);
-		}else if (vRA.z >= step1 * str && vAT.z >= step1 * str && vAB.z >= step1 * str) {
-			colour = new Color(.3f, .6f, .3f, 1f);
+		} else if (vRA.z >= step1 && vAT.z >= step1 && vAB.z >= step1) {
+			colour = new Color(.5f, .7f, .5f, 1f);
 		}
 
 		vi = new VertexInfo();

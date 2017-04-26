@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 public class TerrainDebugWindow {
@@ -75,14 +76,14 @@ public class TerrainDebugWindow {
 		sliderScale.setValue(4f);
 
 		lblSeaLevel = new Label("Sea level:", skin);
-		sliderSeaLevel = new Slider(1, 20, 1f, false, skin);
+		sliderSeaLevel = new Slider(1, 20, 0.2f, false, skin);
 		sliderSeaLevel.setValue(4f);
 
 		Button buttonGenerate = new TextButton("Generate New World", skin);
 		Button buttonUpdateVals = new TextButton("Update values", skin);
 		lblFPS = new Label("fps:", skin);
 
-		Dialog debugWindow = new Dialog("Terrain Debug", skin);
+		Window debugWindow = new Window("Terrain Debug", skin);
 		TextButton btnX = new TextButton("X", skin);
 		btnX.addListener(new ChangeListener() {
 

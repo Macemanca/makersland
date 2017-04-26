@@ -38,9 +38,9 @@ public class NoiseGenerator {
 				if (((i <= borderWidth) || (i >= width - borderWidth)
 						|| (j <= borderWidth) || (j >= height - borderWidth))
 						&& borderWidth != 0) {
-					noise[i][j] = (float) 0;
+					noise[i][j] = 0f;
 				} else {
-					noise[i][j] = (float) r.nextDouble();// % 1;
+					noise[i][j] = r.nextFloat();
 				}
 			}
 		}
@@ -73,9 +73,9 @@ public class NoiseGenerator {
 				if (((i <= borderWidth) || (i >= width - borderWidth)
 						|| (j <= borderWidth) || (j >= height - borderWidth))
 						&& borderWidth != 0) {
-					noise[i][j] = (float) 0;
+					noise[i][j] = 0f;
 				} else {
-					noise[i][j] = (float) r.nextDouble()
+					noise[i][j] = r.nextFloat()
 							- (distanceToCenter / 100);
 					if (noise[i][j] < 0) {
 						noise[i][j] = 0;
@@ -104,11 +104,11 @@ public class NoiseGenerator {
 				if (((i <= borderWidth) || (i >= width - borderWidth) || (j >= height
 						- borderWidth))
 						&& borderWidth != 0 && i >= 5) {
-					noise[i][j] = (float) 0;
+					noise[i][j] = 0f;
 				} else if (i < 5) {
 					noise[i] = border;
 				} else {
-					noise[i][j] = (float) r.nextDouble();
+					noise[i][j] = r.nextFloat();
 				}
 			}
 		}
@@ -133,11 +133,11 @@ public class NoiseGenerator {
 				if (((i <= borderWidth) || (i >= width - borderWidth) || (j >= height
 						- borderWidth))
 						&& borderWidth != 0 && j >= 5) {
-					noise[i][j] = (float) 0;
+					noise[i][j] = 0f;
 				} else if (j < 5) {
 					noise[i][j] = border[i];
 				} else {
-					noise[i][j] = (float) r.nextDouble();
+					noise[i][j] = r.nextFloat();
 				}
 			}
 		}
@@ -163,13 +163,13 @@ public class NoiseGenerator {
 			for (int j = 0; j < height; j++) {
 				if (((i >= width - borderWidth) || (j >= height - borderWidth))
 						&& borderWidth != 0 && j >= 5 && i >= 5) {
-					noise[i][j] = (float) 0;
+					noise[i][j] = 0f;
 				} else if (i < 5) {
 					noise[i] = borderE;
 				} else if (j < 5) {
 					noise[i][j] = borderS[i];
 				} else {
-					noise[i][j] = (float) r.nextDouble();
+					noise[i][j] = r.nextFloat();
 				}
 			}
 		}

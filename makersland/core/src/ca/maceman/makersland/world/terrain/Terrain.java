@@ -33,6 +33,7 @@ public class Terrain {
 	private float scale;
 	private float strength;
 	private float[][] heightMap;
+	private float maxDepth = -1f;
 	private int octave;
 	private int borderSize;
 	private int chunkBorderWidth;
@@ -70,7 +71,7 @@ public class Terrain {
 		this.chunksHeight = chunksHeight;
 		this.borderSize = borderSize;
 		this.isIsland = isIsland;
-		
+
 		generateModel();
 
 	}
@@ -86,7 +87,7 @@ public class Terrain {
 		this.borderSize = borderSize;
 		this.isIsland = isIsland;
 		this.seed = seed;
-		
+
 		generateModel();
 
 	}
@@ -119,8 +120,6 @@ public class Terrain {
 				for (int cx = 0; cx < chunks[x][y].tiles.length; cx++) {
 					for (int cy = 0; cy < chunks[x][y].tiles[0].length; cy++) {
 
-						System.out.println("Tile = " + cx + ", " + cy);
-
 						vi1 = chunks[x][y].tiles[cx][cy].getBottomTri().getRIVertexInfo();
 						vi2 = chunks[x][y].tiles[cx][cy].getBottomTri().getATVertexInfo();
 						vi3 = chunks[x][y].tiles[cx][cy].getBottomTri().getABVertexInfo();
@@ -152,6 +151,8 @@ public class Terrain {
 		/* 1 extra vector for outer edges. */
 		int width = (chunksWidth * TerrainChunk.CHUNK_SIZE) + 1;
 		int height = (chunksHeight * TerrainChunk.CHUNK_SIZE) + 1;
+		float depth = 0f;
+		;
 
 		if (isIsland) {
 			heightMap = NoiseGenerator.GeneratePerlinNoise(NoiseGenerator.GenerateSmoothNoise(
@@ -165,8 +166,15 @@ public class Terrain {
 
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
-				vectors[x][y] = new TerrainVector(x * TerrainTile.TILE_SIZE * scale, y * TerrainTile.TILE_SIZE * scale,
-						(float) Math.pow((1 + (heightMap[x][y]) * strength), strength));
+				depth = (float) Math.pow((1 + (heightMap[x][y]) * strength), strength);
+				vectors[x][y] = new TerrainVector(
+						x * TerrainTile.TILE_SIZE * scale,
+						y * TerrainTile.TILE_SIZE * scale,
+						depth);
+
+				if(depth > maxDepth){
+					maxDepth = depth;
+				}
 			}
 		}
 
@@ -201,8 +209,6 @@ public class Terrain {
 				/* using every tile's triangles */
 				for (int cx = 0; cx < chunks[x][y].tiles.length; cx++) {
 					for (int cy = 0; cy < chunks[x][y].tiles[0].length; cy++) {
-
-						System.out.println("Tile = " + cx + ", " + cy);
 
 						vi1 = chunks[x][y].tiles[cx][cy].getBottomTri().getRIVertexInfo();
 						vi2 = chunks[x][y].tiles[cx][cy].getBottomTri().getATVertexInfo();
@@ -392,6 +398,14 @@ public class Terrain {
 
 	public void setChunks(TerrainChunk[][] chunks) {
 		this.chunks = chunks;
+	}
+
+	public float getMaxHeight() {
+		return maxDepth;
+	}
+
+	public void setMaxHeight(float maxHeight) {
+		this.maxDepth = maxHeight;
 	}
 
 }

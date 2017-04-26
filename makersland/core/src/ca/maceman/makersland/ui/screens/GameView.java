@@ -122,7 +122,7 @@ public class GameView extends AbstractScreen {
 		cam.position.set(100f, 100f, 200f);
 		cam.near = 1f;
 		cam.far = 1000f;
-		cam.lookAt(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), 0);
+		cam.lookAt(0, 0, 0);
 		camController = new CameraInputController(cam);
 		camController.scrollFactor = 20f;
 		camController.translateUnits = 100f;
@@ -162,7 +162,7 @@ public class GameView extends AbstractScreen {
 	public void dispose() {
 
 	}
-	
+
 	public void setTerrain(Terrain terrain) {
 		this.terrain = terrain;
 	}
