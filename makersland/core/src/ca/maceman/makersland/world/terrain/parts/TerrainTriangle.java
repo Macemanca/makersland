@@ -35,9 +35,7 @@ public class TerrainTriangle {
 		normal = TerrainUtils.calcNormal(vRA.toVector3(), vAB.toVector3(), vAT.toVector3());
 
 		float maxHeight = parentTile.getParentChunk().getParentTerrain().getMaxHeight();
-
-		System.out.println(maxHeight);
-
+		
 		if (vRA.z >= maxHeight * 0.75f && vAT.z >= maxHeight * 0.75f && vAB.z >= maxHeight * 0.75f) {
 			terrainType = TerrainType.SNOWY_PEAKS;
 		} else if (vRA.z >= maxHeight * 0.45f && vAT.z >= maxHeight * 0.45f && vAB.z >= maxHeight * 0.45f) {

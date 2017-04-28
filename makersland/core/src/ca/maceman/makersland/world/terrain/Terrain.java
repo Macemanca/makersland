@@ -110,7 +110,6 @@ public class Terrain {
 		for (int x = 0; x < chunksWidth; x++) {
 			for (int y = 0; y < chunksHeight; y++) {
 
-				System.out.println("Chunk = " + x + ", " + y);
 				chunks[x][y] = new TerrainChunk(this, x, y);
 
 				/* Create a model part */
@@ -202,7 +201,6 @@ public class Terrain {
 		for (int x = 0; x < chunksWidth; x++) {
 			for (int y = 0; y < chunksHeight; y++) {
 
-				System.out.println("Chunk = " + x + ", " + y);
 				/* Create a model part */
 				meshBuilder.begin(Usage.Position | Usage.Normal | Usage.ColorPacked, GL20.GL_TRIANGLES);
 

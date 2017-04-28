@@ -40,7 +40,7 @@ public class TerrainDebugWindow {
 	 */
 	private void setupWindow() {
 
-		skin = new Skin(Gdx.files.internal("assets/uiskin.json"));
+		skin = new Skin(Gdx.files.internal("uiskin.json"));
 		stage = new Stage();
 		Table debugTable = new Table();
 		debugTable.row();
@@ -65,19 +65,19 @@ public class TerrainDebugWindow {
 
 		lblOctaveCount = new Label("Octave Count:", skin);
 		sliderOctaveCount = new Slider(1, 10, 1, false, skin);
-		sliderOctaveCount.setValue(7f);
+		sliderOctaveCount.setValue(6f);
 
 		lblStrength = new Label("Strength:", skin);
 		sliderStrength = new Slider(1, 5, 0.2f, false, skin);
-		sliderStrength.setValue(3.5f);
+		sliderStrength.setValue(3.0f);
 
 		lblScale = new Label("Scale:", skin);
 		sliderScale = new Slider(1, 10, 1f, false, skin);
-		sliderScale.setValue(4f);
+		sliderScale.setValue(1f);
 
 		lblSeaLevel = new Label("Sea level:", skin);
 		sliderSeaLevel = new Slider(1, 20, 0.2f, false, skin);
-		sliderSeaLevel.setValue(4f);
+		sliderSeaLevel.setValue(3f);
 
 		Button buttonGenerate = new TextButton("Generate New World", skin);
 		Button buttonUpdateVals = new TextButton("Update values", skin);

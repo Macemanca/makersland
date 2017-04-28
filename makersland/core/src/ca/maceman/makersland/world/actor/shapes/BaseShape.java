@@ -9,7 +9,7 @@ public abstract class BaseShape implements Shape {
 	public Vector3 dimensions = new Vector3();
 
 	public BaseShape(BoundingBox bounds) {
-//		center = bounds.getCenter();
-//		dimensions = bounds.getDimensions();
+		bounds.getCenter(center);
+		bounds.getDimensions(dimensions);
 	}
 }
