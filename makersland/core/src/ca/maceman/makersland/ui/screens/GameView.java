@@ -1,20 +1,20 @@
 package ca.maceman.makersland.ui.screens;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.assets.loaders.ModelLoader;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
+import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
-import com.badlogic.gdx.graphics.g3d.loader.ObjLoader;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
@@ -44,6 +44,7 @@ public class GameView extends AbstractScreen {
 	private TerrainDebugWindow terrainDebugWindow;
 	private ArrayList<GameObject> vModelList;
 	private AssetManager assets;
+	private Random random;
 
 	public GameView() {
 
@@ -51,6 +52,7 @@ public class GameView extends AbstractScreen {
 
 	public GameView(Terrain terrain) {
 		super();
+		random = new Random();
 		vModelList = new ArrayList<GameObject>();
 		if (debug) {
 			terrainDebugWindow = new TerrainDebugWindow(this);
@@ -69,6 +71,8 @@ public class GameView extends AbstractScreen {
 		terrainInstance = new ModelInstance(terrain.getTerrainModel());
 		this.ocean = new Ocean(ocean.getSeaLevel(), terrain);
 		oceanInstance = ocean.oceanModelInstance;
+		vModelList = new ArrayList<GameObject>();
+		setupNatureActors();
 	}
 
 	@Override
@@ -83,8 +87,8 @@ public class GameView extends AbstractScreen {
 		camController.update();
 
 		worldModelBatch.begin(cam);
-		 worldModelBatch.render(oceanInstance, environment);
-		 worldModelBatch.render(terrainInstance, environment);
+		worldModelBatch.render(oceanInstance, environment);
+		worldModelBatch.render(terrainInstance, environment);
 
 		for (GameObject mi : vModelList) {
 			if (mi.isVisible(cam)) {
@@ -153,28 +157,46 @@ public class GameView extends AbstractScreen {
 	}
 
 	private void setupNatureActors() {
-		GameObject treeObj;	
+		GameObject treeObj;
 		BoundingBox boundingBox = new BoundingBox();
-		
-		assets.load("models/nature/Oak_Green_01.obj", Model.class);
-		assets.load("models/nature/Oak_Green_01.obj", Model.class);
+
+		assets.load("models/nature/myOak.g3db", Model.class);
 		assets.finishLoading();
-		
 		/*
-		 * Make an array of all models, a add them randomly based on terrain type
+		 * Make an array of all models, a add them randomly based on terrain
+		 * type
 		 */
-		
-		Model oakTreeModel = assets.get("models/nature/Oak_Green_01.obj", Model.class);
+
+		Model oakTreeModel = assets.get("models/nature/myOak.g3db", Model.class);
+
 		oakTreeModel.calculateBoundingBox(boundingBox);
-        Shape shape = (Shape) new Sphere(boundingBox);
+		Shape shape = (Shape) new Sphere(boundingBox);
 
 		for (TerrainChunk[] chunkCol : terrain.getChunks()) {
 			for (TerrainChunk chunk : chunkCol) {
 				for (TerrainTile[] tileCol : chunk.tiles) {
 					for (TerrainTile tile : tileCol) {
-						if (tile.getBottomTri().terrainType == TerrainType.TEMPERATE) {
-							treeObj = new GameObject(oakTreeModel, tile.getV1().toVector3(), shape);
+						if (tile.getBottomTri().terrainType == TerrainType.TEMPERATE
+								|| tile.getBottomTri().terrainType == TerrainType.BOREAL) {
+							switch (random.nextInt(4)) {
+							case 1:
+								treeObj = new GameObject(oakTreeModel, tile.getV1().toVector3(), shape);
+								break;
+							case 2:
+								treeObj = new GameObject(oakTreeModel, tile.getV2().toVector3(), shape);
+								break;
+							case 3:
+								treeObj = new GameObject(oakTreeModel, tile.getV3().toVector3(), shape);
+								break;
+							case 4:
+								treeObj = new GameObject(oakTreeModel, tile.getV4().toVector3(), shape);
+								break;
+							default:
+								treeObj = new GameObject(oakTreeModel, tile.getV4().toVector3(), shape);
+								break;
+							}
 							treeObj.transform.rotate(Vector3.X, 90f);
+							treeObj.transform.scale(0.01f, 0.01f, 0.01f);
 							vModelList.add(treeObj);
 
 						}
