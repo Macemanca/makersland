@@ -29,6 +29,10 @@ public class TerrainTile {
 	 */
 	public TerrainTile(TerrainVector v1, TerrainVector v2, TerrainVector v3, TerrainVector v4, TerrainChunk parentChunk) {
 
+		this.v1 = v1;
+		this.v2 = v2;
+		this.v3 = v3;
+		this.v4 = v4;
 		this.parentChunk = parentChunk;
 		
 		if (Math.abs(v1.z - v4.z) > Math.abs(v2.z - v3.z)) {

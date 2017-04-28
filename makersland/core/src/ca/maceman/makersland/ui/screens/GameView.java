@@ -4,19 +4,30 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.assets.loaders.ModelLoader;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
+import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
+import com.badlogic.gdx.graphics.g3d.loader.ObjLoader;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.collision.BoundingBox;
 
 import ca.maceman.makersland.ui.screens.debug.TerrainDebugWindow;
 import ca.maceman.makersland.world.actor.GameObject;
+import ca.maceman.makersland.world.actor.shapes.Shape;
+import ca.maceman.makersland.world.actor.shapes.Sphere;
 import ca.maceman.makersland.world.terrain.Ocean;
 import ca.maceman.makersland.world.terrain.Terrain;
+import ca.maceman.makersland.world.terrain.parts.TerrainChunk;
+import ca.maceman.makersland.world.terrain.parts.TerrainTile;
+import ca.maceman.makersland.world.terrain.parts.TerrainType;
 
 public class GameView extends AbstractScreen {
 
@@ -32,6 +43,7 @@ public class GameView extends AbstractScreen {
 	private Ocean ocean;
 	private TerrainDebugWindow terrainDebugWindow;
 	private ArrayList<GameObject> vModelList;
+	private AssetManager assets;
 
 	public GameView() {
 
@@ -46,7 +58,7 @@ public class GameView extends AbstractScreen {
 
 		this.terrain = terrain;
 
-		ocean = new Ocean(5, terrain);
+		ocean = new Ocean(3f, terrain);
 		oceanInstance = ocean.oceanModelInstance;
 
 		create();
@@ -57,7 +69,6 @@ public class GameView extends AbstractScreen {
 		terrainInstance = new ModelInstance(terrain.getTerrainModel());
 		this.ocean = new Ocean(ocean.getSeaLevel(), terrain);
 		oceanInstance = ocean.oceanModelInstance;
-		vModelList = new ArrayList<GameObject>();
 	}
 
 	@Override
@@ -72,8 +83,8 @@ public class GameView extends AbstractScreen {
 		camController.update();
 
 		worldModelBatch.begin(cam);
-		worldModelBatch.render(oceanInstance, environment);
-		worldModelBatch.render(terrainInstance, environment);
+		 worldModelBatch.render(oceanInstance, environment);
+		 worldModelBatch.render(terrainInstance, environment);
 
 		for (GameObject mi : vModelList) {
 			if (mi.isVisible(cam)) {
@@ -107,6 +118,9 @@ public class GameView extends AbstractScreen {
 		/* setup Builders and assets */
 		worldModelBatch = new ModelBatch();
 
+		assets = new AssetManager();
+
+		setupNatureActors();
 		time = 0;
 
 	}
@@ -122,7 +136,7 @@ public class GameView extends AbstractScreen {
 		cam.position.set(100f, 100f, 200f);
 		cam.near = 1f;
 		cam.far = 1000f;
-		cam.lookAt(0, 0, 0);
+		cam.lookAt(0f, 0f, 0f);
 		camController = new CameraInputController(cam);
 		camController.scrollFactor = 20f;
 		camController.translateUnits = 100f;
@@ -136,6 +150,31 @@ public class GameView extends AbstractScreen {
 		multiplexer.addProcessor(camController);
 		multiplexer.addProcessor(this);
 		Gdx.input.setInputProcessor(multiplexer);
+	}
+
+	private void setupNatureActors() {
+		GameObject treeObj;
+
+        ModelLoader loader = new ObjLoader();
+        Model treeModel = loader.loadModel(Gdx.files.internal("models/nature/Oak_Green_01.obj"));
+        BoundingBox boundingBox = new BoundingBox();
+        treeModel.calculateBoundingBox(boundingBox);
+		Shape shape = (Shape) new Sphere(boundingBox);
+
+		for (TerrainChunk[] chunkCol : terrain.getChunks()) {
+			for (TerrainChunk chunk : chunkCol) {
+				for (TerrainTile[] tileCol : chunk.tiles) {
+					for (TerrainTile tile : tileCol) {
+						if (tile.getBottomTri().terrainType == TerrainType.TEMPERATE) {
+							treeObj = new GameObject(treeModel, tile.getV1().toVector3(), shape);
+							treeObj.transform.rotate(Vector3.X, 90f);
+							vModelList.add(treeObj);
+
+						}
+					}
+				}
+			}
+		}
 	}
 
 	@Override
