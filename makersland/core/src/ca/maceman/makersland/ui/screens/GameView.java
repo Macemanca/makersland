@@ -153,20 +153,27 @@ public class GameView extends AbstractScreen {
 	}
 
 	private void setupNatureActors() {
-		GameObject treeObj;
-
-        ModelLoader loader = new ObjLoader();
-        Model treeModel = loader.loadModel(Gdx.files.internal("models/nature/Oak_Green_01.obj"));
-        BoundingBox boundingBox = new BoundingBox();
-        treeModel.calculateBoundingBox(boundingBox);
-		Shape shape = (Shape) new Sphere(boundingBox);
+		GameObject treeObj;	
+		BoundingBox boundingBox = new BoundingBox();
+		
+		assets.load("models/nature/Oak_Green_01.obj", Model.class);
+		assets.load("models/nature/Oak_Green_01.obj", Model.class);
+		assets.finishLoading();
+		
+		/*
+		 * Make an array of all models, a add them randomly based on terrain type
+		 */
+		
+		Model oakTreeModel = assets.get("models/nature/Oak_Green_01.obj", Model.class);
+		oakTreeModel.calculateBoundingBox(boundingBox);
+        Shape shape = (Shape) new Sphere(boundingBox);
 
 		for (TerrainChunk[] chunkCol : terrain.getChunks()) {
 			for (TerrainChunk chunk : chunkCol) {
 				for (TerrainTile[] tileCol : chunk.tiles) {
 					for (TerrainTile tile : tileCol) {
 						if (tile.getBottomTri().terrainType == TerrainType.TEMPERATE) {
-							treeObj = new GameObject(treeModel, tile.getV1().toVector3(), shape);
+							treeObj = new GameObject(oakTreeModel, tile.getV1().toVector3(), shape);
 							treeObj.transform.rotate(Vector3.X, 90f);
 							vModelList.add(treeObj);
 
