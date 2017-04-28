@@ -153,12 +153,13 @@ public class GameView extends AbstractScreen {
 	}
 
 	private void setupNatureActors() {
-
-		assets.load("models/nature/Oak_Green_01.obj", Model.class);
-		assets.finishLoading();
-		Model treeModel = assets.get("models/nature/Oak_Green_01.obj", Model.class);
-		Shape shape = (Shape) new Sphere(new BoundingBox());
 		GameObject treeObj;
+
+        ModelLoader loader = new ObjLoader();
+        Model treeModel = loader.loadModel(Gdx.files.internal("models/nature/Oak_Green_01.obj"));
+        BoundingBox boundingBox = new BoundingBox();
+        treeModel.calculateBoundingBox(boundingBox);
+		Shape shape = (Shape) new Sphere(boundingBox);
 
 		for (TerrainChunk[] chunkCol : terrain.getChunks()) {
 			for (TerrainChunk chunk : chunkCol) {
