@@ -11,7 +11,6 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
-import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
@@ -94,7 +93,7 @@ public class GameView extends AbstractScreen {
 
 		for (GameObject mi : vModelList) {
 			if (mi.isVisible(cam)) {
-				worldModelBatch.render(mi);
+				worldModelBatch.render(mi, environment);
 			}
 		}
 

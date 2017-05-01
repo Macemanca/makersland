@@ -5,8 +5,6 @@ import ca.maceman.makersland.world.terrain.parts.TerrainTile;
 import ca.maceman.makersland.world.terrain.parts.TerrainVector;
 import ca.maceman.makersland.world.utils.terrain.NoiseGenerator;
 
-import java.util.Vector;
-
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
