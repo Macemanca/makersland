@@ -5,6 +5,8 @@ import ca.maceman.makersland.world.terrain.parts.TerrainTile;
 import ca.maceman.makersland.world.terrain.parts.TerrainVector;
 import ca.maceman.makersland.world.utils.terrain.NoiseGenerator;
 
+import java.util.Vector;
+
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
@@ -12,6 +14,7 @@ import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.utils.MeshBuilder;
 import com.badlogic.gdx.graphics.g3d.utils.MeshPartBuilder.VertexInfo;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 
 /**
@@ -166,12 +169,10 @@ public class Terrain {
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
 				depth = (float) Math.pow((1 + (heightMap[x][y]) * strength), strength);
-				vectors[x][y] = new TerrainVector(
-						x * TerrainTile.TILE_SIZE * scale,
-						y * TerrainTile.TILE_SIZE * scale,
+				vectors[x][y] = new TerrainVector(x * TerrainTile.TILE_SIZE * scale, y * TerrainTile.TILE_SIZE * scale,
 						depth);
 
-				if(depth > maxDepth){
+				if (depth > maxDepth) {
 					maxDepth = depth;
 				}
 			}
@@ -234,51 +235,21 @@ public class Terrain {
 	}
 
 	/**
-	 * Gets the Depth at x and y. TODO, needs some tweaking.
+	 * Gets the Depth at x and y.
 	 * 
 	 * @param xPos
 	 * @param yPos
 	 * @return
 	 */
-	public float getTerrainHeight(float xPos, float yPos) {
+	public float getDepth(Vector3 v1, Vector3 v2, Vector3 v3, float x, float z) {
 
-		/*
-		 * we first get the height of four points of the quad underneath the
-		 * point Check to make sure this point is not off the map at all
-		 */
-		int x = (int) (xPos / scale);
-		int y = (int) (yPos / scale);
+		float det = (v2.z - v3.z) * (v1.x - v3.x) + (v3.x - v2.x) * (v1.z - v3.z);
 
-		if (x >= 180 || y >= 180) {
-			return 0;
-		}
-		int xPlusOne = x + 1;
-		int yPlusOne = y + 1;
+		float l1 = ((v2.z - v3.z) * (x - v3.x) + (v3.x - v2.x) * (z - v3.z)) / det;
+		float l2 = ((v3.z - v1.z) * (x - v3.x) + (v1.x - v3.x) * (z - v3.z)) / det;
+		float l3 = 1.0f - l1 - l2;
 
-		float triZ0 = (heightMap[x][y]);
-		float triZ1 = (heightMap[xPlusOne][y]);
-		float triZ2 = (heightMap[x][yPlusOne]);
-		float triZ3 = (heightMap[xPlusOne][yPlusOne]);
-
-		float height = 0.0f;
-		float sqX = (xPos / scale) - x;
-		float sqy = (yPos / scale) - y;
-
-		if ((sqX + sqy) < 1) {
-
-			height = triZ0;
-			height += (triZ1 - triZ0) * sqX;
-			height += (triZ2 - triZ0) * sqy;
-
-		} else {
-
-			height = triZ3;
-			height += (triZ1 - triZ3) * (1.0f - sqy);
-			height += (triZ2 - triZ3) * (1.0f - sqX);
-
-		}
-
-		return (float) Math.pow(1 + height, strength);
+		return l1 * v1.y + l2 * v2.y + l3 * v3.y;
 
 	}
 

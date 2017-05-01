@@ -156,49 +156,82 @@ public class GameView extends AbstractScreen {
 		Gdx.input.setInputProcessor(multiplexer);
 	}
 
+	/* 
+	 * TODO NEEDS TWEAKING 
+	 */
 	private void setupNatureActors() {
 		GameObject treeObj;
 		BoundingBox boundingBox = new BoundingBox();
 
-		assets.load("models/nature/myOak.g3db", Model.class);
+		// General
+		assets.load("models/nature/rock_small1.g3db", Model.class);
+		assets.load("models/nature/rock_tall1.g3db", Model.class);
+
+		// Mountains
+
+		// Boreal
+		assets.load("models/nature/pineTree.g3db", Model.class);
+
+		// Temperate
+		assets.load("models/nature/oakTree.g3db", Model.class);
+		assets.load("models/nature/treeTrunk.g3db", Model.class);
+
+		// Grass
+
+		// Beach
+
 		assets.finishLoading();
+
 		/*
 		 * Make an array of all models, a add them randomly based on terrain
 		 * type
 		 */
-
-		Model oakTreeModel = assets.get("models/nature/myOak.g3db", Model.class);
-
-		oakTreeModel.calculateBoundingBox(boundingBox);
-		Shape shape = (Shape) new Sphere(boundingBox);
+		Model[] models = { assets.get("models/nature/oakTree.g3db", Model.class),
+				assets.get("models/nature/pineTree.g3db", Model.class),
+				assets.get("models/nature/rock_small1.g3db", Model.class),
+				assets.get("models/nature/rock_tall1.g3db", Model.class) };
 
 		for (TerrainChunk[] chunkCol : terrain.getChunks()) {
 			for (TerrainChunk chunk : chunkCol) {
 				for (TerrainTile[] tileCol : chunk.tiles) {
 					for (TerrainTile tile : tileCol) {
-						if (tile.getBottomTri().terrainType == TerrainType.TEMPERATE
-								|| tile.getBottomTri().terrainType == TerrainType.BOREAL) {
-							switch (random.nextInt(4)) {
-							case 1:
-								treeObj = new GameObject(oakTreeModel, tile.getV1().toVector3(), shape);
+						if (random.nextInt(models.length) < (models.length * 3)) {
+							Model model = null;
+							switch (tile.getBottomTri().terrainType) {
+							case MOUNTAIN:
+								model = models[random.nextInt(2) + 3];
 								break;
-							case 2:
-								treeObj = new GameObject(oakTreeModel, tile.getV2().toVector3(), shape);
+
+							case BOREAL:
+								model = models[random.nextInt(2) + 1];
 								break;
-							case 3:
-								treeObj = new GameObject(oakTreeModel, tile.getV3().toVector3(), shape);
+
+							case TEMPERATE:
+								model = models[random.nextInt(3)];
 								break;
-							case 4:
-								treeObj = new GameObject(oakTreeModel, tile.getV4().toVector3(), shape);
-								break;
+							case SNOWY_PEAKS:
+							case GRASSLAND:
+							case BEACH:
 							default:
-								treeObj = new GameObject(oakTreeModel, tile.getV4().toVector3(), shape);
 								break;
 							}
-							treeObj.transform.rotate(Vector3.X, 90f);
-							treeObj.transform.scale(0.01f, 0.01f, 0.01f);
-							vModelList.add(treeObj);
 
+							if (model != null) {
+								model.calculateBoundingBox(boundingBox);
+
+								// rvec = v1+r1(v2−v1)+r2(v3−v1)
+								Vector3 rvec = tile.getV1().toVector3()
+										.mulAdd(((tile.getV2().toVector3().sub(tile.getV1().toVector3()))),
+												random.nextFloat())
+										.mulAdd(tile.getV3().toVector3().sub(tile.getV1().toVector3()),
+												random.nextFloat());
+
+								treeObj = new GameObject(model, rvec, (Shape) new Sphere(boundingBox));
+
+								treeObj.transform.rotate(Vector3.X, 90f);
+								treeObj.transform.scale(0.01f, 0.01f, 0.01f);
+								vModelList.add(treeObj);
+							}
 						}
 					}
 				}
