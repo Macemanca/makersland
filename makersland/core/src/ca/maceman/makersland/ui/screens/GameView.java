@@ -1,6 +1,8 @@
 package ca.maceman.makersland.ui.screens;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
@@ -156,8 +158,8 @@ public class GameView extends AbstractScreen {
 		Gdx.input.setInputProcessor(multiplexer);
 	}
 
-	/* 
-	 * TODO NEEDS TWEAKING 
+	/*
+	 * TODO NEEDS TWEAKING : way too heavy 
 	 */
 	private void setupNatureActors() {
 		GameObject treeObj;
@@ -186,52 +188,49 @@ public class GameView extends AbstractScreen {
 		 * Make an array of all models, a add them randomly based on terrain
 		 * type
 		 */
-		Model[] models = { assets.get("models/nature/oakTree.g3db", Model.class),
-				assets.get("models/nature/pineTree.g3db", Model.class),
-				assets.get("models/nature/rock_small1.g3db", Model.class),
-				assets.get("models/nature/rock_tall1.g3db", Model.class) };
+		Map<String, ArrayList<Model>> models = new HashMap<String, ArrayList<Model>>();
 
+		models.put("general", new ArrayList<Model>());
+		models.get("general").add(assets.get("models/nature/rock_small1.g3db", Model.class));
+//		models.get("general").add(assets.get("models/nature/rock_tall1.g3db", Model.class));
+
+		models.put(TerrainType.BOREAL.toString(), new ArrayList<Model>());
+		models.get(TerrainType.BOREAL.toString()).add(assets.get("models/nature/pineTree.g3db", Model.class));
+//		models.get(TerrainType.BOREAL.toString()).add(assets.get("models/nature/treeTrunk.g3db", Model.class));
+		models.get(TerrainType.BOREAL.toString()).addAll(models.get("general"));
+
+		models.put(TerrainType.TEMPERATE.toString(), new ArrayList<Model>());
+		models.get(TerrainType.TEMPERATE.toString()).add(assets.get("models/nature/oakTree.g3db", Model.class));
+		models.get(TerrainType.TEMPERATE.toString()).addAll(models.get("general"));
+
+		models.put(TerrainType.MOUNTAIN.toString(), new ArrayList<Model>());
+		models.get(TerrainType.MOUNTAIN.toString()).addAll(models.get("general"));
+		
 		for (TerrainChunk[] chunkCol : terrain.getChunks()) {
 			for (TerrainChunk chunk : chunkCol) {
 				for (TerrainTile[] tileCol : chunk.tiles) {
 					for (TerrainTile tile : tileCol) {
-						if (random.nextInt(models.length) < (models.length * 3)) {
-							Model model = null;
-							switch (tile.getBottomTri().terrainType) {
-							case MOUNTAIN:
-								model = models[random.nextInt(2) + 3];
-								break;
 
-							case BOREAL:
-								model = models[random.nextInt(2) + 1];
-								break;
+						if (models.containsKey(tile.getBottomTri().terrainType.toString()) 
+								&& models.get(tile.getBottomTri().terrainType.toString())
+								.size() > random.nextInt((models.get(tile.getBottomTri().terrainType.toString()).size() * 5))) {
 
-							case TEMPERATE:
-								model = models[random.nextInt(3)];
-								break;
-							case SNOWY_PEAKS:
-							case GRASSLAND:
-							case BEACH:
-							default:
-								break;
-							}
+							Model model = models.get(tile.getBottomTri().terrainType.toString()).get(random.nextInt(models.get(tile.getBottomTri().terrainType.toString()).size()));
+							model.calculateBoundingBox(boundingBox);
 
-							if (model != null) {
-								model.calculateBoundingBox(boundingBox);
+							// rvec = v1+r1(v2−v1)+r2(v3−v1)
+							Vector3 rvec = tile.getV1().toVector3()
+									.mulAdd(((tile.getV2().toVector3().sub(tile.getV1().toVector3()))),
+											random.nextFloat())
+									.mulAdd(tile.getV3().toVector3().sub(tile.getV1().toVector3()), random.nextFloat());
 
-								// rvec = v1+r1(v2−v1)+r2(v3−v1)
-								Vector3 rvec = tile.getV1().toVector3()
-										.mulAdd(((tile.getV2().toVector3().sub(tile.getV1().toVector3()))),
-												random.nextFloat())
-										.mulAdd(tile.getV3().toVector3().sub(tile.getV1().toVector3()),
-												random.nextFloat());
+							treeObj = new GameObject(model, rvec, (Shape) new Sphere(boundingBox));
 
-								treeObj = new GameObject(model, rvec, (Shape) new Sphere(boundingBox));
+							treeObj.transform.rotate(Vector3.X, 90f);
+							treeObj.transform.rotate(Vector3.Y, random.nextFloat()*360);
+							treeObj.transform.scale(0.01f, 0.01f, 0.01f);
+							vModelList.add(treeObj);
 
-								treeObj.transform.rotate(Vector3.X, 90f);
-								treeObj.transform.scale(0.01f, 0.01f, 0.01f);
-								vModelList.add(treeObj);
-							}
 						}
 					}
 				}

@@ -17,4 +17,9 @@ public enum TerrainType {
 		this.name = name;
 		this.colour = colour;
 	}
+	
+	@Override
+	public String toString(){
+		return name;
+	}
 }
