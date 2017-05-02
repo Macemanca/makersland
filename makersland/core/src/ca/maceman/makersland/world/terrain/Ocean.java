@@ -1,6 +1,5 @@
 package ca.maceman.makersland.world.terrain;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
@@ -19,8 +18,9 @@ public class Ocean {
 		this.seaLevel = seaLevel;
 		ModelBuilder mb = new ModelBuilder();
 
-		oceanModel = mb.createCylinder(terrain.getWidthUnits() * 10, this.seaLevel, terrain.getWidthUnits() * 10, 36, new Material(ColorAttribute.createDiffuse(Color.TEAL)),
+		oceanModel = mb.createCylinder(terrain.getWidthUnits() * 10, this.seaLevel, terrain.getWidthUnits() * 10, 36, new Material(ColorAttribute.createDiffuse(.1f,0.667f,0.845f,1f)),
 				Usage.Position | Usage.Normal | Usage.TextureCoordinates);
+		
 		oceanModelInstance = new ModelInstance(oceanModel);
 		oceanModelInstance.transform.setToRotation(Vector3.X, 90);
 		oceanModelInstance.transform.translate(

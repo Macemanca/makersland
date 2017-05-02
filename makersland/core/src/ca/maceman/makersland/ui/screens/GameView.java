@@ -158,7 +158,7 @@ public class GameView extends AbstractScreen {
 	}
 
 	/*
-	 * TODO NEEDS TWEAKING : way too heavy 
+	 * TODO NEEDS TWEAKING : way too heavy
 	 */
 	private void setupNatureActors() {
 		GameObject treeObj;
@@ -191,11 +191,13 @@ public class GameView extends AbstractScreen {
 
 		models.put("general", new ArrayList<Model>());
 		models.get("general").add(assets.get("models/nature/rock_small1.g3db", Model.class));
-//		models.get("general").add(assets.get("models/nature/rock_tall1.g3db", Model.class));
+		// models.get("general").add(assets.get("models/nature/rock_tall1.g3db",
+		// Model.class));
 
 		models.put(TerrainType.BOREAL.toString(), new ArrayList<Model>());
 		models.get(TerrainType.BOREAL.toString()).add(assets.get("models/nature/pineTree.g3db", Model.class));
-//		models.get(TerrainType.BOREAL.toString()).add(assets.get("models/nature/treeTrunk.g3db", Model.class));
+		// models.get(TerrainType.BOREAL.toString()).add(assets.get("models/nature/treeTrunk.g3db",
+		// Model.class));
 		models.get(TerrainType.BOREAL.toString()).addAll(models.get("general"));
 
 		models.put(TerrainType.TEMPERATE.toString(), new ArrayList<Model>());
@@ -204,31 +206,59 @@ public class GameView extends AbstractScreen {
 
 		models.put(TerrainType.MOUNTAIN.toString(), new ArrayList<Model>());
 		models.get(TerrainType.MOUNTAIN.toString()).addAll(models.get("general"));
-		
+
 		for (TerrainChunk[] chunkCol : terrain.getChunks()) {
 			for (TerrainChunk chunk : chunkCol) {
 				for (TerrainTile[] tileCol : chunk.tiles) {
 					for (TerrainTile tile : tileCol) {
+						for (int i = 0; i < terrain.getScale(); i++) {
+							if (models.containsKey(tile.getTopTri().terrainType.toString())
+									&& models.get(tile.getTopTri().terrainType.toString()).size() > random.nextInt(
+											(models.get(tile.getTopTri().terrainType.toString()).size() * 10))) {
 
-						if (models.containsKey(tile.getBottomTri().terrainType.toString()) 
-								&& models.get(tile.getBottomTri().terrainType.toString())
-								.size() > random.nextInt((models.get(tile.getBottomTri().terrainType.toString()).size() * 5))) {
+								Model model = models.get(tile.getTopTri().terrainType.toString()).get(
+										random.nextInt(models.get(tile.getTopTri().terrainType.toString()).size()));
+								model.calculateBoundingBox(boundingBox);
 
-							Model model = models.get(tile.getBottomTri().terrainType.toString()).get(random.nextInt(models.get(tile.getBottomTri().terrainType.toString()).size()));
-							model.calculateBoundingBox(boundingBox);
+								// rvec = v1+r1(v2−v1)+r2(v3−v1)
+								Vector3 rvec = tile.getV4().toVector3()
+										.mulAdd(((tile.getV2().toVector3().sub(tile.getV4().toVector3()))),
+												random.nextFloat())
+										.mulAdd(tile.getV3().toVector3().sub(tile.getV4().toVector3()),
+												random.nextFloat());
 
-							// rvec = v1+r1(v2−v1)+r2(v3−v1)
-							Vector3 rvec = tile.getV1().toVector3()
-									.mulAdd(((tile.getV2().toVector3().sub(tile.getV1().toVector3()))),
-											random.nextFloat())
-									.mulAdd(tile.getV3().toVector3().sub(tile.getV1().toVector3()), random.nextFloat());
+								treeObj = new GameObject(model, rvec, (Shape) new Sphere(boundingBox));
 
-							treeObj = new GameObject(model, rvec, (Shape) new Sphere(boundingBox));
+								treeObj.transform.rotate(Vector3.X, 90f);
+								treeObj.transform.rotate(Vector3.Y, random.nextFloat() * 360);
+								treeObj.transform.scale(0.01f, 0.01f, 0.01f);
+								vModelList.add(treeObj);
 
-							treeObj.transform.rotate(Vector3.X, 90f);
-							treeObj.transform.rotate(Vector3.Y, random.nextFloat()*360);
-							treeObj.transform.scale(0.01f, 0.01f, 0.01f);
-							vModelList.add(treeObj);
+							}
+
+							if (models.containsKey(tile.getBottomTri().terrainType.toString())
+									&& models.get(tile.getBottomTri().terrainType.toString()).size() > random.nextInt(
+											(models.get(tile.getBottomTri().terrainType.toString()).size() * 5))) {
+
+								Model model = models.get(tile.getBottomTri().terrainType.toString()).get(
+										random.nextInt(models.get(tile.getBottomTri().terrainType.toString()).size()));
+								model.calculateBoundingBox(boundingBox);
+
+								// rvec = v1+r1(v2−v1)+r2(v3−v1)
+								Vector3 rvec = tile.getV1().toVector3()
+										.mulAdd(((tile.getV2().toVector3().sub(tile.getV1().toVector3()))),
+												random.nextFloat())
+										.mulAdd(tile.getV3().toVector3().sub(tile.getV1().toVector3()),
+												random.nextFloat());
+
+								treeObj = new GameObject(model, rvec, (Shape) new Sphere(boundingBox));
+
+								treeObj.transform.rotate(Vector3.X, 90f);
+								treeObj.transform.rotate(Vector3.Y, random.nextFloat() * 360);
+								treeObj.transform.scale(0.01f, 0.01f, 0.01f);
+								vModelList.add(treeObj);
+
+							}
 
 						}
 					}

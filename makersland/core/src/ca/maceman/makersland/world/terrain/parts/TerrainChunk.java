@@ -5,7 +5,7 @@ import ca.maceman.makersland.world.terrain.Terrain;
 
 public class TerrainChunk {
 
-	public static final int CHUNK_SIZE = 64;
+	public static final int CHUNK_SIZE = 32;
 
 	private Terrain parentTerrain;
 	public TerrainTile[][] tiles;

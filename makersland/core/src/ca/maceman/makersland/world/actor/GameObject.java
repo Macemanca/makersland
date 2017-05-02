@@ -15,6 +15,8 @@ public class GameObject extends ModelInstance {
 	public boolean handled = false;
 	private boolean hidden = false;
 
+	private static final float LOAD_DISTANCE = 100f;
+
 	public GameObject(Model model, Vector3 position) {
 		super(model, position);
 
@@ -31,7 +33,7 @@ public class GameObject extends ModelInstance {
 	}
 
 	public boolean isVisible(Camera cam) {
-		if (hidden) {
+		if (hidden || isInDistanceLoad(cam)) {
 			return false;
 		}
 		return shape == null ? false : shape.isVisible(transform, cam);
@@ -47,5 +49,13 @@ public class GameObject extends ModelInstance {
 
 	public void setHidden(boolean hidden) {
 		this.hidden = hidden;
+	}
+
+	private boolean isInDistanceLoad(Camera cam) {
+		boolean isInDistanceLoad = Math.sqrt(Math
+				.pow(Math.sqrt(Math.pow(cam.position.x - (this.transform.getTranslation(new Vector3())).x, 2f)
+						+ Math.pow(cam.position.y - (this.transform.getTranslation(new Vector3())).y, 2f)), 2f)
+				+ Math.pow(cam.position.z - (this.transform.getTranslation(new Vector3())).z, 2f)) > LOAD_DISTANCE;
+		return isInDistanceLoad;
 	}
 }

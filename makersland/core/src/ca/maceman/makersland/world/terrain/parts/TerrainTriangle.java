@@ -44,7 +44,7 @@ public class TerrainTriangle {
 			terrainType = TerrainType.BOREAL;
 		} else if (vRA.z >= maxHeight * 0.15f && vAT.z >= maxHeight * 0.15f && vAB.z >= maxHeight * 0.15f) {
 			terrainType = TerrainType.TEMPERATE;
-		} else if (vRA.z >= maxHeight * 0.05f && vAT.z >= maxHeight * 0.05f && vAB.z >= maxHeight * 0.05f) {
+		} else if (vRA.z >= maxHeight * 0.10f && vAT.z >= maxHeight * 0.10f && vAB.z >= maxHeight * 0.10f) {
 			terrainType = TerrainType.GRASSLAND;
 		}
 
