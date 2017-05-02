@@ -161,7 +161,7 @@ public class GameView extends AbstractScreen {
 	 * TODO NEEDS TWEAKING : way too heavy
 	 */
 	private void setupNatureActors() {
-		GameObject treeObj;
+		GameObject ob;
 		BoundingBox boundingBox = new BoundingBox();
 
 		// General
@@ -191,27 +191,37 @@ public class GameView extends AbstractScreen {
 
 		models.put("general", new ArrayList<Model>());
 		models.get("general").add(assets.get("models/nature/rock_small1.g3db", Model.class));
-		// models.get("general").add(assets.get("models/nature/rock_tall1.g3db",
-		// Model.class));
+		models.get("general").add(assets.get("models/nature/rock_tall1.g3db", Model.class));
 
 		models.put(TerrainType.BOREAL.toString(), new ArrayList<Model>());
 		models.get(TerrainType.BOREAL.toString()).add(assets.get("models/nature/pineTree.g3db", Model.class));
-		// models.get(TerrainType.BOREAL.toString()).add(assets.get("models/nature/treeTrunk.g3db",
-		// Model.class));
+		models.get(TerrainType.BOREAL.toString()).add(assets.get("models/nature/pineTree.g3db", Model.class));
+		models.get(TerrainType.BOREAL.toString()).add(assets.get("models/nature/pineTree.g3db", Model.class));
+		models.get(TerrainType.BOREAL.toString()).add(assets.get("models/nature/pineTree.g3db", Model.class));
+		models.get(TerrainType.BOREAL.toString()).add(assets.get("models/nature/pineTree.g3db", Model.class));
+		models.get(TerrainType.BOREAL.toString()).add(assets.get("models/nature/treeTrunk.g3db", Model.class));
 		models.get(TerrainType.BOREAL.toString()).addAll(models.get("general"));
 
 		models.put(TerrainType.TEMPERATE.toString(), new ArrayList<Model>());
 		models.get(TerrainType.TEMPERATE.toString()).add(assets.get("models/nature/oakTree.g3db", Model.class));
+		models.get(TerrainType.TEMPERATE.toString()).add(assets.get("models/nature/oakTree.g3db", Model.class));
+		models.get(TerrainType.TEMPERATE.toString()).add(assets.get("models/nature/oakTree.g3db", Model.class));
+		models.get(TerrainType.TEMPERATE.toString()).add(assets.get("models/nature/oakTree.g3db", Model.class));
+		models.get(TerrainType.TEMPERATE.toString()).add(assets.get("models/nature/oakTree.g3db", Model.class));
+		models.get(TerrainType.TEMPERATE.toString()).add(assets.get("models/nature/treeTrunk.g3db", Model.class));
 		models.get(TerrainType.TEMPERATE.toString()).addAll(models.get("general"));
 
 		models.put(TerrainType.MOUNTAIN.toString(), new ArrayList<Model>());
 		models.get(TerrainType.MOUNTAIN.toString()).addAll(models.get("general"));
 
+		models.put(TerrainType.GRASSLAND.toString(), new ArrayList<Model>());
+		models.get(TerrainType.GRASSLAND.toString()).addAll(models.get("general"));
+
 		for (TerrainChunk[] chunkCol : terrain.getChunks()) {
 			for (TerrainChunk chunk : chunkCol) {
 				for (TerrainTile[] tileCol : chunk.tiles) {
 					for (TerrainTile tile : tileCol) {
-						for (int i = 0; i < terrain.getScale(); i++) {
+						for (int i = 0; i < terrain.getScale() * 2; i++) {
 							if (models.containsKey(tile.getTopTri().terrainType.toString())
 									&& models.get(tile.getTopTri().terrainType.toString()).size() > random.nextInt(
 											(models.get(tile.getTopTri().terrainType.toString()).size() * 10))) {
@@ -227,12 +237,14 @@ public class GameView extends AbstractScreen {
 										.mulAdd(tile.getV3().toVector3().sub(tile.getV4().toVector3()),
 												random.nextFloat());
 
-								treeObj = new GameObject(model, rvec, (Shape) new Sphere(boundingBox));
+								ob = new GameObject(model, rvec, (Shape) new Sphere(boundingBox));
 
-								treeObj.transform.rotate(Vector3.X, 90f);
-								treeObj.transform.rotate(Vector3.Y, random.nextFloat() * 360);
-								treeObj.transform.scale(0.01f, 0.01f, 0.01f);
-								vModelList.add(treeObj);
+								ob.transform.rotate(Vector3.X, 90f);
+								ob.transform.rotate(Vector3.Y, random.nextFloat() * 360);
+								ob.transform.scale(0.01f, 0.01f, 0.01f);
+								ob.transform.scale(random.nextFloat() + 0.5f, random.nextFloat() + 0.5f,
+										random.nextFloat() + 0.5f);
+								vModelList.add(ob);
 
 							}
 
@@ -251,12 +263,13 @@ public class GameView extends AbstractScreen {
 										.mulAdd(tile.getV3().toVector3().sub(tile.getV1().toVector3()),
 												random.nextFloat());
 
-								treeObj = new GameObject(model, rvec, (Shape) new Sphere(boundingBox));
+								ob = new GameObject(model, rvec, (Shape) new Sphere(boundingBox));
 
-								treeObj.transform.rotate(Vector3.X, 90f);
-								treeObj.transform.rotate(Vector3.Y, random.nextFloat() * 360);
-								treeObj.transform.scale(0.01f, 0.01f, 0.01f);
-								vModelList.add(treeObj);
+								ob.transform.rotate(Vector3.X, 90f);
+								ob.transform.rotate(Vector3.Y, random.nextFloat() * 360);
+								ob.transform.scale(random.nextFloat() + 0.5f, random.nextFloat() + 0.5f,
+										random.nextFloat() + 0.5f);
+								vModelList.add(ob);
 
 							}
 
